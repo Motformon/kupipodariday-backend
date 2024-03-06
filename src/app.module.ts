@@ -5,6 +5,7 @@ import { UsersModule } from './users/users.module';
 import { WishesModule } from './wishes/wishes.module';
 import { WishlistsModule } from './wishlists/wishlists.module';
 import { OffersModule } from './offers/offers.module';
+import { User } from './users/user.entity';
 
 @Module({
   imports: [
@@ -20,7 +21,7 @@ import { OffersModule } from './offers/offers.module';
       password: 'student',
       database: 'kupipodariday',
       // migrations: [`${__dirname}/**/database/migrations/**/*{.ts,.js}`],
-      entities: [],
+      entities: [User],
       synchronize: false,
     }),
   ],
