@@ -28,7 +28,7 @@ export class Wishlist {
 
   @Column()
   image: string;
-
-  @Column()
-  items: any;
+  //
+  // @Column()
+  // items: any;
 }

@@ -47,9 +47,9 @@ export class Wish {
   @Column()
   description: string;
 
-  @Column()
-  offers: any[];
-
-  @Column()
-  copied: any;
+  // @Column()
+  // offers: any[];
+  //
+  // @Column()
+  // copied: any;
 }

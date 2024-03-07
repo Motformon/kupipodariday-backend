@@ -39,12 +39,12 @@ export class User {
   @Column()
   password: string;
 
-  @Column()
-  wishes: any;
-
-  @Column()
-  offers: any;
-
-  @Column()
-  wishlists: any;
+  // @Column()
+  // wishes: any;
+  //
+  // @Column()
+  // offers: any;
+  //
+  // @Column()
+  // wishlists: any;
 }
