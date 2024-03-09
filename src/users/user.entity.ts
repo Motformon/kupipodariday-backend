@@ -18,26 +18,26 @@ export class User {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column()
+  @Column({ default: new Date() })
   createdAt: Date;
 
-  @Column()
+  @Column({ default: new Date() })
   updatedAt: Date;
 
   @Column()
   username: string;
 
-  @Column()
-  about: string;
-
-  @Column()
-  avatar: string;
-
-  @Column()
-  email: string;
-
-  @Column()
-  password: string;
+  // @Column()
+  // about: string;
+  //
+  // @Column()
+  // avatar: string;
+  //
+  // @Column()
+  // email: string;
+  //
+  // @Column()
+  // password: string;
 
   // @Column()
   // wishes: any;

@@ -12,10 +12,6 @@ import { Wishlist } from './wishlists/wishlist.entity';
 
 @Module({
   imports: [
-    UsersModule,
-    WishesModule,
-    WishlistsModule,
-    OffersModule,
     TypeOrmModule.forRoot({
       type: 'postgres',
       host: 'localhost',
@@ -27,6 +23,10 @@ import { Wishlist } from './wishlists/wishlist.entity';
       entities: [User, Offer, Wish, Wishlist],
       synchronize: true,
     }),
+    UsersModule,
+    WishesModule,
+    WishlistsModule,
+    OffersModule,
   ],
   controllers: [AppController],
   providers: [],

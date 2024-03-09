@@ -14,20 +14,20 @@ export class Wishlist {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column()
+  @Column({ default: new Date() })
   createdAt: Date;
 
-  @Column()
+  @Column({ default: new Date() })
   updatedAt: Date;
 
   @Column()
   name: string;
 
-  @Column()
-  description: string;
-
-  @Column()
-  image: string;
+  // @Column()
+  // description: string;
+  //
+  // @Column()
+  // image: string;
   //
   // @Column()
   // items: any;

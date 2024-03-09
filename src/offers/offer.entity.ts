@@ -14,21 +14,21 @@ export class Offer {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column()
+  @Column({ default: new Date() })
   createdAt: Date;
 
-  @Column()
+  @Column({ default: new Date() })
   updatedAt: Date;
 
-  @Column()
-  user: number;
+  // @Column()
+  // user: number;
 
   @Column()
   amount: number;
 
-  @Column()
-  item: string;
-
-  @Column()
-  hidden: boolean;
+  // @Column()
+  // item: string;
+  //
+  // @Column()
+  // hidden: boolean;
 }

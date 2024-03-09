@@ -20,32 +20,32 @@ export class Wish {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column()
+  @Column({ default: new Date() })
   createdAt: Date;
 
-  @Column()
+  @Column({ default: new Date() })
   updatedAt: Date;
 
   @Column()
   name: string;
 
-  @Column()
-  link: string;
-
-  @Column()
-  image: string;
-
-  @Column()
-  price: number;
-
-  @Column()
-  raised: number;
-
-  @Column()
-  owner: string;
-
-  @Column()
-  description: string;
+  // @Column()
+  // link: string;
+  //
+  // @Column()
+  // image: string;
+  //
+  // @Column()
+  // price: number;
+  //
+  // @Column()
+  // raised: number;
+  //
+  // @Column()
+  // owner: string;
+  //
+  // @Column()
+  // description: string;
 
   // @Column()
   // offers: any[];
