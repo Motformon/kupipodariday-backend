@@ -9,6 +9,7 @@ import { User } from './users/user.entity';
 import { Offer } from './offers/offer.entity';
 import { Wish } from './wishes/wish.entity';
 import { Wishlist } from './wishlists/wishlist.entity';
+import { AuthModule } from './auth/auth.module';
 
 @Module({
   imports: [
@@ -24,6 +25,7 @@ import { Wishlist } from './wishlists/wishlist.entity';
       synchronize: true,
     }),
     UsersModule,
+    AuthModule,
     WishesModule,
     WishlistsModule,
     OffersModule,
