@@ -1,13 +1,6 @@
-import { Entity, PrimaryGeneratedColumn, Column } from 'typeorm';
-
-//id — уникальный числовой идентификатор. Генерируется автоматически и является первичным ключем каждой из таблиц;
-//createdAt — дата создания, тип значения Date;
-//updatedAt — дата изменения, тип значения Date.
-
-//name — название списка. Не может быть длиннее 250 символов и короче одного;
-//description — описание подборки, строка до 1500 символов;
-//image — обложка для подборки;
-//items содержит набор ссылок на подарки.
+import { Entity, PrimaryGeneratedColumn, Column, ManyToOne } from 'typeorm';
+import { IsUrl, Length } from 'class-validator';
+import { User } from '../users/user.entity';
 
 @Entity()
 export class Wishlist {
@@ -21,14 +14,17 @@ export class Wishlist {
   updatedAt: Date;
 
   @Column()
+  @Length(1, 250)
   name: string;
 
-  // @Column()
-  // description: string;
-  //
-  // @Column()
-  // image: string;
-  //
-  // @Column()
-  // items: any;
+  @Column()
+  @Length(1, 1500)
+  description: string;
+
+  @Column()
+  @IsUrl()
+  image: string;
+
+  @ManyToOne(() => User, (user) => user.wishlists)
+  user: User;
 }

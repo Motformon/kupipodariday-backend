@@ -1,13 +1,6 @@
-import { Entity, PrimaryGeneratedColumn, Column } from 'typeorm';
-
-//id — уникальный числовой идентификатор. Генерируется автоматически и является первичным ключем каждой из таблиц;
-//createdAt — дата создания, тип значения Date;
-//updatedAt — дата изменения, тип значения Date.
-
-//user содержит id желающего скинуться;
-//item содержит ссылку на товар;
-//amount — сумма заявки, округляется до двух знаков после запятой;
-//hidden — флаг, который определяет показывать ли информацию о скидывающемся в списке. По умолчанию равен false.
+import { Entity, PrimaryGeneratedColumn, Column, ManyToOne } from 'typeorm';
+import { IsUrl } from 'class-validator';
+import { User } from '../users/user.entity';
 
 @Entity()
 export class Offer {
@@ -20,15 +13,16 @@ export class Offer {
   @Column({ default: new Date() })
   updatedAt: Date;
 
-  // @Column()
-  // user: number;
-
   @Column()
+  @IsUrl()
+  item: string;
+
+  @Column('decimal', { precision: 1 })
   amount: number;
 
-  // @Column()
-  // item: string;
-  //
-  // @Column()
-  // hidden: boolean;
+  @Column({ default: false })
+  hidden: boolean;
+
+  @ManyToOne(() => User, (user) => user.wishes)
+  user: User;
 }

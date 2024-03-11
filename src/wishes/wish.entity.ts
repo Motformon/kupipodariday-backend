@@ -1,19 +1,13 @@
-import { Entity, PrimaryGeneratedColumn, Column } from 'typeorm';
-
-//id — уникальный числовой идентификатор. Генерируется автоматически и является первичным ключем каждой из таблиц;
-//createdAt — дата создания, тип значения Date;
-//updatedAt — дата изменения, тип значения Date.
-
-//name — название подарка. Не может быть длиннее 250 символов и короче одного.
-//link — ссылка на интернет-магазин, в котором можно приобрести подарок, строка.
-//image
-//ссылка на изображение подарка, строка. Должна быть валидным URL.
-//price — стоимость подарка, с округлением до сотых, число.
-//raised — сумма предварительного сбора или сумма, которую пользователи сейчас готовы скинуть на подарок. Также округляется до сотых.
-//owner — ссылка на пользователя, который добавил пожелание подарка.
-//description — строка с описанием подарка длиной от 1 и до 1024 символов.
-//offers — массив ссылок на заявки скинуться от других пользователей.
-//copied — содержит cчётчик тех, кто скопировал подарок себе. Целое десятичное число.
+import {
+  Entity,
+  PrimaryGeneratedColumn,
+  Column,
+  OneToMany,
+  ManyToOne,
+} from 'typeorm';
+import { IsUrl, Length } from 'class-validator';
+import { Offer } from '../offers/offer.entity';
+import { User } from '../users/user.entity';
 
 @Entity()
 export class Wish {
@@ -27,29 +21,33 @@ export class Wish {
   updatedAt: Date;
 
   @Column()
+  @Length(1, 250)
   name: string;
 
-  // @Column()
-  // link: string;
-  //
-  // @Column()
-  // image: string;
-  //
-  // @Column()
-  // price: number;
-  //
-  // @Column()
-  // raised: number;
-  //
-  // @Column()
-  // owner: string;
-  //
-  // @Column()
-  // description: string;
+  @Column()
+  @IsUrl()
+  link: string;
 
-  // @Column()
-  // offers: any[];
-  //
-  // @Column()
-  // copied: any;
+  @Column()
+  @IsUrl()
+  image: string;
+
+  @Column('decimal', { precision: 2 })
+  price: number;
+
+  @Column('decimal', { precision: 2 })
+  raised: number;
+
+  @Column()
+  @Length(1, 1024)
+  description: string;
+
+  @Column('decimal', { array: true, precision: 2 })
+  copied: number[];
+
+  @OneToMany(() => Offer, (offer) => offer.user)
+  offers: Offer[];
+
+  @ManyToOne(() => User, (user) => user.offers)
+  owner: User;
 }

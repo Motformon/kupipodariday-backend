@@ -1,17 +1,8 @@
-import { Entity, PrimaryGeneratedColumn, Column } from 'typeorm';
-
-//id — уникальный числовой идентификатор. Генерируется автоматически и является первичным ключем каждой из таблиц;
-//createdAt — дата создания, тип значения Date;
-//updatedAt — дата изменения, тип значения Date.
-//username — имя пользователя, уникальная строка от 2 до 30 символов, обязательное поле.
-//about — **информация о пользователе, строка от 2 до 200 символов. В качестве значения по умолчанию укажите для него строку: «Пока ничего не рассказал о себе».
-//avatar — ссылка на аватар. В качестве значения по умолчанию задайте https://i.pravatar.cc/300
-//email — адрес электронной почты пользователя, должен быть уникален.
-//password — пароль пользователя, строка.
-//wishes — список желаемых подарков. Используйте для него соответствующий тип связи.
-//offers — содержит список подарков, на которые скидывается пользователь. Установите для него подходящий тип связи.
-//wishlists
-//содержит список вишлистов, которые создал пользователь. Установите для него подходящий тип связи.
+import { IsEmail, IsUrl, Length } from 'class-validator';
+import { Entity, PrimaryGeneratedColumn, Column, OneToMany } from 'typeorm';
+import { Wish } from '../wishes/wish.entity';
+import { Offer } from '../offers/offer.entity';
+import { Wishlist } from 'src/wishlists/wishlist.entity';
 
 @Entity()
 export class User {
@@ -24,27 +15,31 @@ export class User {
   @Column({ default: new Date() })
   updatedAt: Date;
 
-  @Column()
+  @Column({ unique: true })
+  @Length(2, 30)
   username: string;
 
-  // @Column()
-  // about: string;
-  //
-  // @Column()
-  // avatar: string;
-  //
-  // @Column()
-  // email: string;
-  //
+  @Column({ default: 'Пока ничего не рассказал о себе' })
+  @Length(2, 30)
+  about: string;
+
+  @Column({ default: 'https://i.pravatar.cc/300' })
+  @IsUrl()
+  avatar: string;
+
+  @Column({ unique: true })
+  @IsEmail()
+  email: string;
+
   @Column()
   password: string;
 
-  // @Column()
-  // wishes: any;
-  //
-  // @Column()
-  // offers: any;
-  //
-  // @Column()
-  // wishlists: any;
+  @OneToMany(() => Wish, (wish) => wish.owner)
+  wishes: Wish[];
+
+  @OneToMany(() => Offer, (offer) => offer.user)
+  offers: Offer[];
+
+  @OneToMany(() => Wishlist, (wishlist) => wishlist.user)
+  wishlists: Wishlist[];
 }
