@@ -1,6 +1,8 @@
 import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { UsersService } from '../users/users.service';
+import { SignInDto } from './dto/signin.dto';
+import { SignUpDto } from './dto/signup.dto';
 
 @Injectable()
 export class AuthService {
@@ -9,23 +11,18 @@ export class AuthService {
     private jwtService: JwtService,
   ) {}
 
-  async validateUser(username: string, pass: string): Promise<any> {
-    const user = await this.usersService.findOne(username);
-    if (user && user.password === pass) {
-      const { password, ...result } = user;
-      return result;
-    }
-    return null;
-  }
-
-  async signIn(username: string, pass: string) {
-    const user = await this.usersService.findOne(username);
-    if (user?.password !== pass) {
-      throw new UnauthorizedException();
+  async signIn(signInDto: SignInDto) {
+    const user = await this.usersService.findOne(signInDto.email);
+    if (user?.password !== signInDto.password) {
+      throw new UnauthorizedException('Некорректная пара логин и пароль');
     }
     const payload = { username: user.username, sub: user.id };
     return {
       access_token: await this.jwtService.signAsync(payload),
     };
+  }
+
+  async signUp(signUpDto: SignUpDto) {
+    return this.usersService.create(signUpDto);
   }
 }

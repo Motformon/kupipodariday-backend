@@ -15,11 +15,8 @@ import { User } from '../users/user.entity';
     TypeOrmModule.forFeature([User]),
     UsersModule,
     JwtModule.register({
-      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-      // @ts-ignore
-      global: true,
       secret: jwtConstants.secret,
-      signOptions: { expiresIn: '60s' },
+      signOptions: { expiresIn: '7d' },
     }),
   ],
   providers: [

@@ -1,4 +1,4 @@
-import { IsEmail, IsUrl, Length } from 'class-validator';
+import { IsEmail, IsOptional, IsString, IsUrl, Length } from 'class-validator';
 import { Entity, PrimaryGeneratedColumn, Column, OneToMany } from 'typeorm';
 import { Wish } from '../wishes/wish.entity';
 import { Offer } from '../offers/offer.entity';
@@ -16,14 +16,20 @@ export class User {
   updatedAt: Date;
 
   @Column({ unique: true })
-  @Length(2, 30)
+  @IsString()
+  @Length(2, 30, { message: 'Длина текста должна быть от 2 до 30 символов!' })
   username: string;
 
   @Column({ default: 'Пока ничего не рассказал о себе' })
-  @Length(2, 30)
+  @IsString()
+  @IsOptional()
+  @Length(2, 200, {
+    message: 'Длина текста о себе должна быть от 2 до 200 символов!',
+  })
   about: string;
 
   @Column({ default: 'https://i.pravatar.cc/300' })
+  @IsOptional()
   @IsUrl()
   avatar: string;
 
@@ -32,6 +38,7 @@ export class User {
   email: string;
 
   @Column()
+  @IsString()
   password: string;
 
   @OneToMany(() => Wish, (wish) => wish.owner)

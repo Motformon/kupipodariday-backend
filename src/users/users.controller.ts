@@ -7,11 +7,9 @@ import {
   NotFoundException,
   Param,
   ParseIntPipe,
-  Post,
 } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { UpdateUserDto } from './dto/update-user.dto';
-import { CreateUserDto } from './dto/create-user.dto';
 import { User } from './user.entity';
 
 @Controller('users')
@@ -26,11 +24,6 @@ export class UsersController {
   @Get(':id')
   findById(@Param('id', ParseIntPipe) id: number): Promise<User> {
     return this.usersService.findById(id);
-  }
-
-  @Post()
-  create(@Body() user: CreateUserDto) {
-    return this.usersService.create(user);
   }
 
   @Patch(':id')

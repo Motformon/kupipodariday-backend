@@ -1,14 +1,15 @@
 import {
-  Body,
+  Body, ConflictException,
   Controller,
-  Get,
   HttpCode,
   HttpStatus,
   Post,
-  Request,
 } from '@nestjs/common';
+import { QueryFailedError } from 'typeorm';
 import { AuthService } from './auth.service';
 import { Public } from './decorators/public.decorator';
+import { SignInDto } from './dto/signin.dto';
+import { SignUpDto } from './dto/signup.dto';
 
 @Controller('auth')
 export class AuthController {
@@ -16,13 +17,21 @@ export class AuthController {
 
   @Public()
   @HttpCode(HttpStatus.OK)
-  @Post('login')
-  signIn(@Body() signInDto: Record<string, any>) {
-    return this.authService.signIn(signInDto.username, signInDto.password);
+  @Post('signin')
+  signIn(@Body() signInDto: SignInDto) {
+    return this.authService.signIn(signInDto);
   }
 
-  @Get('profile')
-  getProfile(@Request() req) {
-    return req.user;
+  @Public()
+  @HttpCode(HttpStatus.CREATED)
+  @Post('signup')
+  signUp(@Body() signUpDto: SignUpDto) {
+    return this.authService.signUp(signUpDto).catch((err) => {
+      if (err instanceof QueryFailedError) {
+        throw new ConflictException(
+          'Пользователь с таким email или username уже зарегистрирован',
+        );
+      }
+    });
   }
 }
