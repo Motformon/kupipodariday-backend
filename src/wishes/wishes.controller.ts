@@ -7,20 +7,24 @@ import {
   Param,
   ParseIntPipe,
   Patch,
-  Post,
+  Post, Request,
 } from '@nestjs/common';
 import { CreateWishDto } from './dto/create-wish.dto';
 import { UpdateWishDto } from './dto/update-wish.dto';
 import { Wish } from './wish.entity';
 import { WishesService } from './wishes.service';
+import { UsersService } from '../users/users.service';
 
 @Controller('wishes')
 export class WishesController {
-  constructor(private wishesService: WishesService) {}
-
-  @Get()
-  findAll(): Promise<Wish[]> {
-    return this.wishesService.findAll();
+  constructor(
+    private wishesService: WishesService,
+    private usersService: UsersService,
+  ) {}
+  //Возвращать 40 последних подарков
+  @Get('/last')
+  findLast(): Promise<Wish[]> {
+    return this.wishesService.findLast();
   }
 
   @Get(':id')
@@ -29,8 +33,13 @@ export class WishesController {
   }
 
   @Post()
-  create(@Body() wish: CreateWishDto) {
-    return this.wishesService.create(wish);
+  async create(@Request() req, @Body() wish: CreateWishDto) {
+    const userId = req?.user?.sub;
+    const findUser = await this.usersService.findById(userId);
+    if (!findUser) {
+      throw new NotFoundException('Пользователь не найден!');
+    }
+    return this.wishesService.create(wish, findUser);
   }
 
   @Patch(':id')

@@ -1,5 +1,6 @@
 import {
-  Body, ConflictException,
+  Body,
+  ConflictException,
   Controller,
   HttpCode,
   HttpStatus,
@@ -26,11 +27,14 @@ export class AuthController {
   @HttpCode(HttpStatus.CREATED)
   @Post('signup')
   signUp(@Body() signUpDto: SignUpDto) {
-    return this.authService.signUp(signUpDto).catch((err) => {
-      if (err instanceof QueryFailedError) {
-        throw new ConflictException(
-          'Пользователь с таким email или username уже зарегистрирован',
-        );
+    return this.authService.signUp(signUpDto).catch((error) => {
+      if (error instanceof QueryFailedError) {
+        const err = error.driverError;
+        if (err.code === '23505') {
+          throw new ConflictException(
+            'Пользователь с таким email или username уже зарегистрирован',
+          );
+        }
       }
     });
   }

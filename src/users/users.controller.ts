@@ -1,16 +1,15 @@
 import {
   Body,
   Controller,
-  Delete,
   Get,
   Patch,
   NotFoundException,
   Param,
-  ParseIntPipe,
+  Request,
 } from '@nestjs/common';
 import { UsersService } from './users.service';
-import { UpdateUserDto } from './dto/update-user.dto';
 import { User } from './user.entity';
+import { UpdateMeDto } from './dto/update-me.dto';
 
 @Controller('users')
 export class UsersController {
@@ -21,29 +20,34 @@ export class UsersController {
     return this.usersService.findAll();
   }
 
-  @Get(':id')
-  findById(@Param('id', ParseIntPipe) id: number): Promise<User> {
-    return this.usersService.findById(id);
+  @Get('/me')
+  findMe(@Request() req): Promise<User> {
+    const userId = req?.user?.sub;
+    return this.usersService.findById(userId);
   }
 
-  @Patch(':id')
-  async updateById(
-    @Param('id', ParseIntPipe) id: number,
-    @Body() user: UpdateUserDto,
-  ) {
-    const findUser = await this.usersService.findById(id);
+  @Get('/me/wishes')
+  async findMeWishes(@Request() req) {
+    const userId = req?.user?.sub;
+    return this.usersService.findWishes(userId);
+  }
+
+  @Patch('/me')
+  async updateMe(@Request() req, @Body() user: UpdateMeDto) {
+    const userId = req?.user?.sub;
+    const findUser = await this.usersService.findById(userId);
     if (!findUser) {
-      throw new NotFoundException();
+      throw new NotFoundException('Пользователь не найден!');
     }
-    await this.usersService.updateById(id, user);
+    await this.usersService.updateById(userId, user);
   }
 
-  @Delete(':id')
-  async removeById(@Param('id', ParseIntPipe) id: number) {
-    const user = await this.usersService.findById(id);
-    if (!user) {
-      throw new NotFoundException();
+  @Get(':username')
+  async findByUsername(@Param('username') username: string): Promise<User> {
+    const findUser = await this.usersService.findByUsername(username);
+    if (!findUser) {
+      throw new NotFoundException('Пользователь не найден!');
     }
-    await this.usersService.removeById(id);
+    return findUser;
   }
 }

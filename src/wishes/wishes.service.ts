@@ -4,6 +4,7 @@ import { Repository } from 'typeorm';
 import { CreateWishDto } from './dto/create-wish.dto';
 import { UpdateWishDto } from './dto/update-wish.dto';
 import { Wish } from './wish.entity';
+import { User } from '../users/user.entity';
 
 @Injectable()
 export class WishesService {
@@ -12,7 +13,7 @@ export class WishesService {
     private readonly wishRepository: Repository<Wish>,
   ) {}
 
-  findAll(): Promise<Wish[]> {
+  findLast(): Promise<Wish[]> {
     return this.wishRepository.find();
   }
 
@@ -28,7 +29,7 @@ export class WishesService {
     return this.wishRepository.update({ id }, updateWishDto);
   }
 
-  create(createWishDto: CreateWishDto): Promise<Wish> {
-    return this.wishRepository.save(createWishDto);
+  create(createWishDto: CreateWishDto, owner: User): Promise<Wish> {
+    return this.wishRepository.save({ ...createWishDto, owner });
   }
 }

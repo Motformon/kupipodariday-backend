@@ -1,5 +1,5 @@
 import { IsEmail, IsOptional, IsString, IsUrl, Length } from 'class-validator';
-import { Entity, PrimaryGeneratedColumn, Column, OneToMany } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, OneToMany, JoinTable } from 'typeorm';
 import { Wish } from '../wishes/wish.entity';
 import { Offer } from '../offers/offer.entity';
 import { Wishlist } from 'src/wishlists/wishlist.entity';
@@ -41,7 +41,9 @@ export class User {
   @IsString()
   password: string;
 
+
   @OneToMany(() => Wish, (wish) => wish.owner)
+  @JoinTable()
   wishes: Wish[];
 
   @OneToMany(() => Offer, (offer) => offer.user)
