@@ -16,21 +16,20 @@ export class UsersService {
     return this.userRepository.find();
   }
 
-  findOne(email: string): Promise<User> {
-    return this.userRepository.findOneBy({ email });
-  }
-
   findById(id: number): Promise<User> {
     return this.userRepository.findOneBy({ id });
   }
 
-  findWishes(id: number): Promise<User> {
+  findUserWishes(id: number): Promise<User> {
     return this.userRepository.findOne({
       where: {
         id,
       },
-      select: {
-        wishes: true,
+      relations: {
+        wishes: {
+          owner: true,
+          offers: true,
+        },
       },
     });
   }
@@ -40,7 +39,10 @@ export class UsersService {
   }
 
   updateById(id: number, updateUserDto: UpdateMeDto) {
-    return this.userRepository.update({ id }, updateUserDto);
+    return this.userRepository.update(
+      { id },
+      { ...updateUserDto, updatedAt: new Date() },
+    );
   }
 
   create(createUserDto: SignUpDto): Promise<User> {

@@ -39,8 +39,9 @@ export class Wish {
   @IsNumber()
   price: number;
 
-  // @Column()
-  // raised: number;
+  @Column({ default: 0 })
+  @IsNumber()
+  raised: number;
 
   @Column()
   @Length(1, 1024, {
@@ -49,8 +50,9 @@ export class Wish {
   @IsString()
   description: string;
 
-  // @Column('decimal', { array: true, precision: 2 })
-  // copied: number[];
+  @Column({ default: 0 })
+  @IsNumber()
+  copied: number;
 
   @OneToMany(() => Offer, (offer) => offer.user)
   offers: Offer[];

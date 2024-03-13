@@ -8,15 +8,22 @@ import {
   ParseIntPipe,
   Patch,
   Post,
+  Request,
 } from '@nestjs/common';
 import { CreateWishlistDto } from './dto/create-wishlist.dto';
 import { UpdateWishlistDto } from './dto/update-wishlist.dto';
 import { Wishlist } from './wishlist.entity';
 import { WishlistsService } from './wishlists.service';
+import { UsersService } from '../users/users.service';
+import { WishesService } from '../wishes/wishes.service';
 
 @Controller('wishlists')
 export class WishlistsController {
-  constructor(private wishlistsService: WishlistsService) {}
+  constructor(
+    private wishlistsService: WishlistsService,
+    private usersService: UsersService,
+    private wishesService: WishesService,
+  ) {}
 
   @Get()
   findAll(): Promise<Wishlist[]> {
@@ -24,13 +31,23 @@ export class WishlistsController {
   }
 
   @Get(':id')
-  findById(@Param('id', ParseIntPipe) id: number): Promise<Wishlist> {
-    return this.wishlistsService.findById(id);
+  async findById(@Param('id', ParseIntPipe) id: number): Promise<Wishlist> {
+    const wishlist = await this.wishlistsService.findById(id);
+    const wishes = await this.wishesService.findByIds(wishlist.items || []);
+    return {
+      ...wishlist,
+      items: wishes as any,
+    };
   }
 
   @Post()
-  create(@Body() wishlist: CreateWishlistDto) {
-    return this.wishlistsService.create(wishlist);
+  async create(@Request() req, @Body() wishlist: CreateWishlistDto) {
+    const userId = req?.user?.sub;
+    const findUser = await this.usersService.findById(userId);
+    if (!findUser) {
+      throw new NotFoundException('Пользователь не найден!');
+    }
+    return this.wishlistsService.create(wishlist, findUser);
   }
 
   @Patch(':id')

@@ -41,7 +41,6 @@ export class User {
   @IsString()
   password: string;
 
-
   @OneToMany(() => Wish, (wish) => wish.owner)
   @JoinTable()
   wishes: Wish[];
@@ -49,6 +48,6 @@ export class User {
   @OneToMany(() => Offer, (offer) => offer.user)
   offers: Offer[];
 
-  @OneToMany(() => Wishlist, (wishlist) => wishlist.user)
+  @OneToMany(() => Wishlist, (wishlist) => wishlist.owner)
   wishlists: Wishlist[];
 }

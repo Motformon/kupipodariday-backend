@@ -12,7 +12,7 @@ export class AuthService {
   ) {}
 
   async signIn(signInDto: SignInDto) {
-    const user = await this.usersService.findOne(signInDto.email);
+    const user = await this.usersService.findByUsername(signInDto.username);
     if (user?.password !== signInDto.password) {
       throw new UnauthorizedException('Некорректная пара логин и пароль');
     }

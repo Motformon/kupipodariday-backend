@@ -1,5 +1,5 @@
 import { Entity, PrimaryGeneratedColumn, Column, ManyToOne } from 'typeorm';
-import { IsUrl, Length } from 'class-validator';
+import { IsUrl, Length, MaxLength } from 'class-validator';
 import { User } from '../users/user.entity';
 
 @Entity()
@@ -14,11 +14,15 @@ export class Wishlist {
   updatedAt: Date;
 
   @Column()
-  @Length(1, 250)
+  @Length(1, 250, {
+    message: 'Длина названия должна быть от 2 до 200 символов!',
+  })
   name: string;
 
-  @Column()
-  @Length(1, 1500)
+  @Column({ default: '' })
+  @MaxLength(1500, {
+    message: 'Длина описания должна быть до 1500 символов!',
+  })
   description: string;
 
   @Column()
@@ -26,5 +30,8 @@ export class Wishlist {
   image: string;
 
   @ManyToOne(() => User, (user) => user.wishlists)
-  user: User;
+  owner: User;
+
+  @Column('int', { array: true })
+  items: number[];
 }

@@ -7,7 +7,8 @@ import {
   Param,
   ParseIntPipe,
   Patch,
-  Post, Request,
+  Post,
+  Request,
 } from '@nestjs/common';
 import { CreateWishDto } from './dto/create-wish.dto';
 import { UpdateWishDto } from './dto/update-wish.dto';
@@ -21,7 +22,12 @@ export class WishesController {
     private wishesService: WishesService,
     private usersService: UsersService,
   ) {}
-  //Возвращать 40 последних подарков
+
+  @Get('/top')
+  findTop(): Promise<Wish[]> {
+    return this.wishesService.findTop();
+  }
+
   @Get('/last')
   findLast(): Promise<Wish[]> {
     return this.wishesService.findLast();

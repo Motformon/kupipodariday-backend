@@ -29,7 +29,8 @@ export class UsersController {
   @Get('/me/wishes')
   async findMeWishes(@Request() req) {
     const userId = req?.user?.sub;
-    return this.usersService.findWishes(userId);
+    const user = await this.usersService.findUserWishes(userId);
+    return user?.wishes || [];
   }
 
   @Patch('/me')
