@@ -55,7 +55,7 @@ export class WishesController {
   ) {
     const findWish = await this.wishesService.findById(id);
     if (!findWish) {
-      throw new NotFoundException();
+      throw new NotFoundException('Подарок не найден!');
     }
     await this.wishesService.updateById(id, wish);
   }
@@ -64,7 +64,7 @@ export class WishesController {
   async removeById(@Param('id', ParseIntPipe) id: number) {
     const wish = await this.wishesService.findById(id);
     if (!wish) {
-      throw new NotFoundException();
+      throw new NotFoundException('Подарок не найден!');
     }
     await this.wishesService.removeById(id);
   }

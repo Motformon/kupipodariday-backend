@@ -1,6 +1,13 @@
-import { Entity, PrimaryGeneratedColumn, Column, ManyToOne } from 'typeorm';
-import { IsUrl } from 'class-validator';
+import {
+  Entity,
+  PrimaryGeneratedColumn,
+  Column,
+  ManyToOne,
+  OneToOne,
+  JoinColumn,
+} from 'typeorm';
 import { User } from '../users/user.entity';
+import { Wish } from '../wishes/wish.entity';
 
 @Entity()
 export class Offer {
@@ -13,11 +20,11 @@ export class Offer {
   @Column({ default: new Date() })
   updatedAt: Date;
 
-  @Column()
-  @IsUrl()
-  item: string;
+  @OneToOne(() => Wish)
+  @JoinColumn()
+  item: Wish;
 
-  @Column('decimal', { precision: 1 })
+  @Column()
   amount: number;
 
   @Column({ default: false })

@@ -1,22 +1,26 @@
 import {
   Body,
   Controller,
-  Delete,
   Get,
   NotFoundException,
   Param,
   ParseIntPipe,
-  Patch,
   Post,
+  Request,
 } from '@nestjs/common';
 import { OffersService } from './offers.service';
 import { Offer } from './offer.entity';
 import { CreateOfferDto } from './dto/create-offer.dto';
-import { UpdateOfferDto } from './dto/update-offer.dto';
+import { UsersService } from '../users/users.service';
+import { WishesService } from '../wishes/wishes.service';
 
 @Controller('offers')
 export class OffersController {
-  constructor(private offersService: OffersService) {}
+  constructor(
+    private offersService: OffersService,
+    private usersService: UsersService,
+    private wishesService: WishesService,
+  ) {}
 
   @Get()
   findAll(): Promise<Offer[]> {
@@ -29,28 +33,16 @@ export class OffersController {
   }
 
   @Post()
-  create(@Body() offer: CreateOfferDto) {
-    return this.offersService.create(offer);
-  }
-
-  @Patch(':id')
-  async updateById(
-    @Param('id', ParseIntPipe) id: number,
-    @Body() offer: UpdateOfferDto,
-  ) {
-    const findOffer = await this.offersService.findById(id);
-    if (!findOffer) {
-      throw new NotFoundException();
+  async create(@Request() req, @Body() offer: CreateOfferDto) {
+    const userId = req?.user?.sub;
+    const findUser = await this.usersService.findById(userId);
+    if (!findUser) {
+      throw new NotFoundException('Пользователь не найден!');
     }
-    await this.offersService.updateById(id, offer);
-  }
-
-  @Delete(':id')
-  async removeById(@Param('id', ParseIntPipe) id: number) {
-    const offer = await this.offersService.findById(id);
-    if (!offer) {
-      throw new NotFoundException();
+    const findWish = await this.wishesService.findById(offer.itemId);
+    if (!findWish) {
+      throw new NotFoundException('Подарок не найден!');
     }
-    await this.offersService.removeById(id);
+    return this.offersService.create(offer, findUser, findWish);
   }
 }
