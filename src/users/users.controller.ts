@@ -11,6 +11,7 @@ import {
 import { UsersService } from './users.service';
 import { User } from './user.entity';
 import { UpdateMeDto } from './dto/update-me.dto';
+import {Wish} from "../wishes/wish.entity";
 
 @Controller('users')
 export class UsersController {
@@ -56,12 +57,12 @@ export class UsersController {
   @Get(':username/wishes')
   async findByUsernameWishes(
     @Param('username') username: string,
-  ): Promise<User> {
+  ): Promise<Wish[]> {
     const findUser = await this.usersService.findByUsernameWishes(username);
     if (!findUser) {
       throw new NotFoundException('Пользователь не найден!');
     }
-    return findUser;
+    return findUser.wishes;
   }
 
   @Post('find')
