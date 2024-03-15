@@ -3,9 +3,10 @@ import {
   PrimaryGeneratedColumn,
   Column,
   OneToMany,
-  ManyToOne, JoinTable,
+  ManyToOne,
+  JoinTable,
 } from 'typeorm';
-import {IsNumber, IsString, IsUrl, Length} from 'class-validator';
+import { IsNumber, IsString, IsUrl, Length } from 'class-validator';
 import { Offer } from '../offers/offer.entity';
 import { User } from '../users/user.entity';
 

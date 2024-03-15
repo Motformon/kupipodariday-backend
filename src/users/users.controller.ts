@@ -6,6 +6,7 @@ import {
   NotFoundException,
   Param,
   Request,
+  Post,
 } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { User } from './user.entity';
@@ -50,5 +51,21 @@ export class UsersController {
       throw new NotFoundException('Пользователь не найден!');
     }
     return findUser;
+  }
+
+  @Get(':username/wishes')
+  async findByUsernameWishes(
+    @Param('username') username: string,
+  ): Promise<User> {
+    const findUser = await this.usersService.findByUsernameWishes(username);
+    if (!findUser) {
+      throw new NotFoundException('Пользователь не найден!');
+    }
+    return findUser;
+  }
+
+  @Post('find')
+  findUsers(@Body() body: { query: string }) {
+    return this.usersService.findUsers(body.query);
   }
 }

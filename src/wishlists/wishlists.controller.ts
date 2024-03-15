@@ -31,13 +31,8 @@ export class WishlistsController {
   }
 
   @Get(':id')
-  async findById(@Param('id', ParseIntPipe) id: number): Promise<Wishlist> {
-    const wishlist = await this.wishlistsService.findById(id);
-    const wishes = await this.wishesService.findByIds(wishlist.items || []);
-    return {
-      ...wishlist,
-      items: wishes as any,
-    };
+  findById(@Param('id', ParseIntPipe) id: number): Promise<Wishlist> {
+    return this.wishlistsService.findById(id);
   }
 
   @Post()
@@ -47,11 +42,14 @@ export class WishlistsController {
     if (!findUser) {
       throw new NotFoundException('Пользователь не найден!');
     }
-    return this.wishlistsService.create(wishlist, findUser);
+    const wishes = await this.wishesService.findByIds(wishlist.itemsId || []);
+
+    return this.wishlistsService.create(wishlist, findUser, wishes);
   }
 
   @Patch(':id')
   async updateById(
+    @Request() req,
     @Param('id', ParseIntPipe) id: number,
     @Body() wishlist: UpdateWishlistDto,
   ) {
@@ -59,7 +57,14 @@ export class WishlistsController {
     if (!findWishlist) {
       throw new NotFoundException();
     }
-    await this.wishlistsService.updateById(id, wishlist);
+    const userId = req?.user?.sub;
+    const findUser = await this.usersService.findById(userId);
+    if (!findUser) {
+      throw new NotFoundException('Пользователь не найден!');
+    }
+    const wishes = await this.wishesService.findByIds(wishlist.itemsId || []);
+
+    await this.wishlistsService.updateById(id, wishlist, findUser, wishes);
   }
 
   @Delete(':id')

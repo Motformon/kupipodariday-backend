@@ -5,6 +5,7 @@ import { Wishlist } from './wishlist.entity';
 import { UpdateWishlistDto } from './dto/update-wishlist.dto';
 import { CreateWishlistDto } from './dto/create-wishlist.dto';
 import { User } from '../users/user.entity';
+import { Wish } from '../wishes/wish.entity';
 
 @Injectable()
 export class WishlistsService {
@@ -32,14 +33,32 @@ export class WishlistsService {
     return this.wishlistRepository.delete({ id });
   }
 
-  updateById(id: number, updateWishlistDto: UpdateWishlistDto) {
-    return this.wishlistRepository.update({ id }, updateWishlistDto);
+  updateById(
+    id: number,
+    updateWishlistDto: UpdateWishlistDto,
+    owner: User,
+    wishes: Wish[],
+  ) {
+    return this.wishlistRepository.update(
+      { id },
+      {
+        owner,
+        items: wishes,
+        image: updateWishlistDto.image,
+        name: updateWishlistDto.name,
+        updatedAt: new Date(),
+      },
+    );
   }
 
-  create(createWishlistDto: CreateWishlistDto, owner: User): Promise<Wishlist> {
+  create(
+    createWishlistDto: CreateWishlistDto,
+    owner: User,
+    wishes: Wish[],
+  ): Promise<Wishlist> {
     return this.wishlistRepository.save({
       owner,
-      items: createWishlistDto.itemsId,
+      items: wishes,
       image: createWishlistDto.image,
       name: createWishlistDto.name,
     });

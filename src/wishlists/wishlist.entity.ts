@@ -1,6 +1,7 @@
-import { Entity, PrimaryGeneratedColumn, Column, ManyToOne } from 'typeorm';
+import {Entity, PrimaryGeneratedColumn, Column, ManyToOne, OneToOne, JoinColumn, ManyToMany} from 'typeorm';
 import { IsUrl, Length, MaxLength } from 'class-validator';
 import { User } from '../users/user.entity';
+import { Wish } from '../wishes/wish.entity';
 
 @Entity()
 export class Wishlist {
@@ -32,6 +33,7 @@ export class Wishlist {
   @ManyToOne(() => User, (user) => user.wishlists)
   owner: User;
 
-  @Column('int', { array: true })
-  items: number[];
+  @ManyToMany(() => Wish)
+  @JoinColumn()
+  items: Wish[];
 }
