@@ -7,6 +7,7 @@ import {
   Post,
 } from '@nestjs/common';
 import { QueryFailedError } from 'typeorm';
+import { hash } from 'bcrypt';
 import { AuthService } from './auth.service';
 import { Public } from './decorators/public.decorator';
 import { SignInDto } from './dto/signin.dto';
@@ -26,16 +27,20 @@ export class AuthController {
   @Public()
   @HttpCode(HttpStatus.CREATED)
   @Post('signup')
-  signUp(@Body() signUpDto: SignUpDto) {
-    return this.authService.signUp(signUpDto).catch((error) => {
-      if (error instanceof QueryFailedError) {
-        const err = error.driverError;
-        if (err.code === '23505') {
-          throw new ConflictException(
-            'Пользователь с таким email или username уже зарегистрирован',
-          );
-        }
-      }
+  async signUp(@Body() signUpDto: SignUpDto) {
+    return hash(signUpDto.password, 10).then((hash) => {
+      return this.authService
+        .signUp({ ...signUpDto, password: hash })
+        .catch((error) => {
+          if (error instanceof QueryFailedError) {
+            const err = error.driverError;
+            if (err.code === '23505') {
+              throw new ConflictException(
+                'Пользователь с таким email или username уже зарегистрирован',
+              );
+            }
+          }
+        });
     });
   }
 }

@@ -1,7 +1,15 @@
-import {Entity, PrimaryGeneratedColumn, Column, ManyToOne, OneToOne, JoinColumn, ManyToMany} from 'typeorm';
+import {
+  Entity,
+  PrimaryGeneratedColumn,
+  Column,
+  ManyToOne,
+  OneToOne,
+  JoinColumn,
+  ManyToMany,
+} from 'typeorm';
 import { IsUrl, Length, MaxLength } from 'class-validator';
-import { User } from '../users/user.entity';
-import { Wish } from '../wishes/wish.entity';
+import { User } from '../../users/entities/user.entity';
+import { Wish } from '../../wishes/entities/wish.entity';
 
 @Entity()
 export class Wishlist {

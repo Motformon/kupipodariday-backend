@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import {Like, Repository } from 'typeorm';
-import { User } from './user.entity';
+import { Like, Repository } from 'typeorm';
+import { User } from './entities/user.entity';
 import { SignUpDto } from '../auth/dto/signup.dto';
 import { UpdateMeDto } from './dto/update-me.dto';
 
@@ -18,12 +18,25 @@ export class UsersService {
     });
   }
 
-  findAll(): Promise<User[]> {
-    return this.userRepository.find();
-  }
-
   findById(id: number): Promise<User> {
     return this.userRepository.findOneBy({ id });
+  }
+
+  findMe(id: number): Promise<User> {
+    return this.userRepository.findOne({
+      where: {
+        id,
+      },
+      select: {
+        id: true,
+        username: true,
+        about: true,
+        avatar: true,
+        email: true,
+        createdAt: true,
+        updatedAt: true,
+      },
+    });
   }
 
   findUserWishes(id: number): Promise<User> {
@@ -36,6 +49,19 @@ export class UsersService {
           owner: true,
           offers: true,
         },
+      },
+    });
+  }
+
+  findAuth(username: string): Promise<User> {
+    return this.userRepository.findOne({
+      where: {
+        username,
+      },
+      select: {
+        password: true,
+        username: true,
+        id: true,
       },
     });
   }

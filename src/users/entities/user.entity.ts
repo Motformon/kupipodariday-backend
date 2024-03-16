@@ -1,8 +1,15 @@
 import { IsEmail, IsOptional, IsString, IsUrl, Length } from 'class-validator';
-import { Entity, PrimaryGeneratedColumn, Column, OneToMany, JoinTable } from 'typeorm';
-import { Wish } from '../wishes/wish.entity';
-import { Offer } from '../offers/offer.entity';
-import { Wishlist } from 'src/wishlists/wishlist.entity';
+import { Exclude } from 'class-transformer';
+import {
+  Entity,
+  PrimaryGeneratedColumn,
+  Column,
+  OneToMany,
+  JoinTable,
+} from 'typeorm';
+import { Wish } from '../../wishes/entities/wish.entity';
+import { Offer } from '../../offers/entities/offer.entity';
+import { Wishlist } from 'src/wishlists/entities/wishlist.entity';
 
 @Entity()
 export class User {
@@ -33,11 +40,11 @@ export class User {
   @IsUrl()
   avatar: string;
 
-  @Column({ unique: true })
+  @Column({ unique: true, select: false })
   @IsEmail()
   email: string;
 
-  @Column()
+  @Column({ select: false })
   @IsString()
   password: string;
 

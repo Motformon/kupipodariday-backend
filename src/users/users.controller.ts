@@ -9,23 +9,18 @@ import {
   Post,
 } from '@nestjs/common';
 import { UsersService } from './users.service';
-import { User } from './user.entity';
+import { User } from './entities/user.entity';
 import { UpdateMeDto } from './dto/update-me.dto';
-import {Wish} from "../wishes/wish.entity";
+import { Wish } from '../wishes/entities/wish.entity';
 
 @Controller('users')
 export class UsersController {
   constructor(private usersService: UsersService) {}
 
-  @Get()
-  findAll(): Promise<User[]> {
-    return this.usersService.findAll();
-  }
-
   @Get('/me')
   findMe(@Request() req): Promise<User> {
     const userId = req?.user?.sub;
-    return this.usersService.findById(userId);
+    return this.usersService.findMe(userId);
   }
 
   @Get('/me/wishes')

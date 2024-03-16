@@ -12,7 +12,7 @@ import {
 } from '@nestjs/common';
 import { CreateWishlistDto } from './dto/create-wishlist.dto';
 import { UpdateWishlistDto } from './dto/update-wishlist.dto';
-import { Wishlist } from './wishlist.entity';
+import { Wishlist } from './entities/wishlist.entity';
 import { WishlistsService } from './wishlists.service';
 import { UsersService } from '../users/users.service';
 import { WishesService } from '../wishes/wishes.service';

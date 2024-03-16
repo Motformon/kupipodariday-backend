@@ -1,10 +1,10 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import {In, Repository} from 'typeorm';
+import { In, Repository } from 'typeorm';
 import { CreateWishDto } from './dto/create-wish.dto';
 import { UpdateWishDto } from './dto/update-wish.dto';
-import { Wish } from './wish.entity';
-import { User } from '../users/user.entity';
+import { Wish } from './entities/wish.entity';
+import { User } from '../users/entities/user.entity';
 
 @Injectable()
 export class WishesService {
@@ -72,5 +72,13 @@ export class WishesService {
 
   create(createWishDto: CreateWishDto, owner: User): Promise<Wish> {
     return this.wishRepository.save({ ...createWishDto, owner });
+  }
+
+  updateCopy(id: number, copied: number) {
+    return this.wishRepository.update({ id }, { copied });
+  }
+
+  createCopy(createWishDto: Wish): Promise<Wish> {
+    return this.wishRepository.save(createWishDto);
   }
 }

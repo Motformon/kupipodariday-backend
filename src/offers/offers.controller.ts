@@ -9,7 +9,7 @@ import {
   Request,
 } from '@nestjs/common';
 import { OffersService } from './offers.service';
-import { Offer } from './offer.entity';
+import { Offer } from './entities/offer.entity';
 import { CreateOfferDto } from './dto/create-offer.dto';
 import { UsersService } from '../users/users.service';
 import { WishesService } from '../wishes/wishes.service';

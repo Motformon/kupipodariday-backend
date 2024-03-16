@@ -12,7 +12,7 @@ import {
 } from '@nestjs/common';
 import { CreateWishDto } from './dto/create-wish.dto';
 import { UpdateWishDto } from './dto/update-wish.dto';
-import { Wish } from './wish.entity';
+import { Wish } from './entities/wish.entity';
 import { WishesService } from './wishes.service';
 import { UsersService } from '../users/users.service';
 
@@ -46,6 +46,29 @@ export class WishesController {
       throw new NotFoundException('Пользователь не найден!');
     }
     return this.wishesService.create(wish, findUser);
+  }
+
+  @Post(':id/copy')
+  async copy(@Request() req, @Param('id', ParseIntPipe) id: number) {
+    const userId = req?.user?.sub;
+    const findUser = await this.usersService.findById(userId);
+    if (!findUser) {
+      throw new NotFoundException('Пользователь не найден!');
+    }
+    const findWish = await this.wishesService.findById(id);
+    if (!findWish) {
+      throw new NotFoundException('Подарок не найден!');
+    }
+
+    await this.wishesService.updateCopy(id, findWish.copied + 1);
+
+    return this.wishesService.createCopy({
+      ...findWish,
+      owner: findUser,
+      copied: findWish.copied + 1,
+      createdAt: new Date(),
+      updatedAt: new Date(),
+    });
   }
 
   @Patch(':id')

@@ -7,8 +7,8 @@ import {
   JoinTable,
 } from 'typeorm';
 import { IsNumber, IsString, IsUrl, Length } from 'class-validator';
-import { Offer } from '../offers/offer.entity';
-import { User } from '../users/user.entity';
+import { Offer } from '../../offers/entities/offer.entity';
+import { User } from '../../users/entities/user.entity';
 
 @Entity()
 export class Wish {
