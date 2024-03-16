@@ -6,15 +6,15 @@ export class UpdateWishDto {
   @Length(1, 250, {
     message: 'Длина названия должна быть от 1 до 250 символов!',
   })
-  @IsString()
+  @IsString({ message: 'Ошибка валидации переданных значений' })
   name: string;
 
   @ApiProperty()
-  @IsUrl()
+  @IsUrl({}, { message: 'Ошибка валидации переданных значений' })
   link: string;
 
   @ApiProperty()
-  @IsUrl()
+  @IsUrl({}, { message: 'Ошибка валидации переданных значений' })
   image: string;
 
   @ApiProperty()
@@ -25,6 +25,6 @@ export class UpdateWishDto {
   @Length(1, 1024, {
     message: 'Длина текста описания должна быть от 1 до 1024 символов!',
   })
-  @IsString()
+  @IsString({ message: 'Ошибка валидации переданных значений' })
   description: string;
 }

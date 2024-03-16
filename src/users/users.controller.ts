@@ -12,6 +12,7 @@ import { UsersService } from './users.service';
 import { User } from './entities/user.entity';
 import { UpdateMeDto } from './dto/update-me.dto';
 import { Wish } from '../wishes/entities/wish.entity';
+import { hashSync } from 'bcrypt';
 
 @Controller('users')
 export class UsersController {
@@ -37,7 +38,9 @@ export class UsersController {
     if (!findUser) {
       throw new NotFoundException('Пользователь не найден!');
     }
-    await this.usersService.updateById(userId, user);
+    const hash = hashSync(user.password, 10);
+
+    await this.usersService.updateById(userId, { ...user, password: hash });
   }
 
   @Get(':username')

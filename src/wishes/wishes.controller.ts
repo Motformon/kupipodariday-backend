@@ -49,23 +49,26 @@ export class WishesController {
   }
 
   @Post(':id/copy')
-  async copy(@Request() req, @Param('id', ParseIntPipe) id: number) {
+  async copy(@Request() req, @Param('id', ParseIntPipe) idWish: number) {
     const userId = req?.user?.sub;
     const findUser = await this.usersService.findById(userId);
     if (!findUser) {
       throw new NotFoundException('Пользователь не найден!');
     }
-    const findWish = await this.wishesService.findById(id);
+    const findWish = await this.wishesService.findById(idWish);
     if (!findWish) {
       throw new NotFoundException('Подарок не найден!');
     }
 
-    await this.wishesService.updateCopy(id, findWish.copied + 1);
+    await this.wishesService.updateCopy(idWish, findWish.copied + 1);
+
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const { id, ...createWish } = findWish;
 
     return this.wishesService.createCopy({
-      ...findWish,
+      ...(createWish as Wish),
       owner: findUser,
-      copied: findWish.copied + 1,
+      copied: createWish.copied + 1,
       createdAt: new Date(),
       updatedAt: new Date(),
     });

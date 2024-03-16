@@ -25,34 +25,34 @@ export class Wish {
   @Length(1, 250, {
     message: 'Длина названия должна быть от 1 до 250 символов!',
   })
-  @IsString()
+  @IsString({ message: 'Ошибка валидации переданных значений' })
   name: string;
 
   @Column()
-  @IsUrl()
+  @IsUrl({}, { message: 'Ошибка валидации переданных значений' })
   link: string;
 
   @Column()
-  @IsUrl()
+  @IsUrl({}, { message: 'Ошибка валидации переданных значений' })
   image: string;
 
   @Column()
-  @IsNumber()
+  @IsNumber({}, { message: 'Ошибка валидации переданных значений' })
   price: number;
 
   @Column({ default: 0 })
-  @IsNumber()
+  @IsNumber({}, { message: 'Ошибка валидации переданных значений' })
   raised: number;
 
   @Column()
   @Length(1, 1024, {
     message: 'Длина текста описания должна быть от 1 до 1024 символов!',
   })
-  @IsString()
+  @IsString({ message: 'Ошибка валидации переданных значений' })
   description: string;
 
   @Column({ default: 0 })
-  @IsNumber()
+  @IsNumber({}, { message: 'Ошибка валидации переданных значений' })
   copied: number;
 
   @OneToMany(() => Offer, (offer) => offer.user)

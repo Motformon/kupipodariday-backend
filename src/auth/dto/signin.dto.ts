@@ -3,10 +3,10 @@ import { IsString } from 'class-validator';
 
 export class SignInDto {
   @ApiProperty()
-  @IsString()
+  @IsString({ message: 'Ошибка валидации переданных значений' })
   username: string;
 
   @ApiProperty()
-  @IsString()
+  @IsString({ message: 'Ошибка валидации переданных значений' })
   password: string;
 }

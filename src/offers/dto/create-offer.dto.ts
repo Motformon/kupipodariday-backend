@@ -3,13 +3,13 @@ import { IsNumber } from 'class-validator';
 
 export class CreateOfferDto {
   @ApiProperty()
-  @IsNumber()
+  @IsNumber({}, { message: 'Ошибка валидации переданных значений' })
   amount: number;
 
   @ApiProperty()
   hidden: boolean;
 
   @ApiProperty()
-  @IsNumber()
+  @IsNumber({}, { message: 'Ошибка валидации переданных значений' })
   itemId: number;
 }

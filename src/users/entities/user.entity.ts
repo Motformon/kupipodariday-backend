@@ -23,12 +23,12 @@ export class User {
   updatedAt: Date;
 
   @Column({ unique: true })
-  @IsString()
+  @IsString({ message: 'Ошибка валидации переданных значений' })
   @Length(2, 30, { message: 'Длина текста должна быть от 2 до 30 символов!' })
   username: string;
 
   @Column({ default: 'Пока ничего не рассказал о себе' })
-  @IsString()
+  @IsString({ message: 'Ошибка валидации переданных значений' })
   @IsOptional()
   @Length(2, 200, {
     message: 'Длина текста о себе должна быть от 2 до 200 символов!',
@@ -37,15 +37,15 @@ export class User {
 
   @Column({ default: 'https://i.pravatar.cc/300' })
   @IsOptional()
-  @IsUrl()
+  @IsUrl({}, { message: 'Ошибка валидации переданных значений' })
   avatar: string;
 
+  @IsEmail({}, { message: 'Ошибка валидации переданных значений' })
   @Column({ unique: true, select: false })
-  @IsEmail()
   email: string;
 
   @Column({ select: false })
-  @IsString()
+  @IsString({ message: 'Ошибка валидации переданных значений' })
   password: string;
 
   @OneToMany(() => Wish, (wish) => wish.owner)

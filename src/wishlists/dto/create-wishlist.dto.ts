@@ -3,11 +3,11 @@ import { IsString, IsUrl } from 'class-validator';
 
 export class CreateWishlistDto {
   @ApiProperty()
-  @IsString()
+  @IsString({ message: 'Ошибка валидации переданных значений' })
   name: string;
 
   @ApiProperty()
-  @IsUrl()
+  @IsUrl({}, { message: 'Ошибка валидации переданных значений' })
   image: string;
 
   @ApiProperty()

@@ -8,6 +8,7 @@ import {
 } from 'typeorm';
 import { User } from '../../users/entities/user.entity';
 import { Wish } from '../../wishes/entities/wish.entity';
+import { IsNumber } from 'class-validator';
 
 @Entity()
 export class Offer {
@@ -25,6 +26,7 @@ export class Offer {
   item: Wish;
 
   @Column()
+  @IsNumber({}, { message: 'Ошибка валидации переданных значений' })
   amount: number;
 
   @Column({ default: false })
