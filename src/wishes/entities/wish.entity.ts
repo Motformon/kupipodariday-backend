@@ -36,12 +36,18 @@ export class Wish {
   @IsUrl({}, { message: 'Ошибка валидации переданных значений' })
   image: string;
 
-  @Column()
-  @IsNumber({}, { message: 'Ошибка валидации переданных значений' })
+  @Column('numeric', { scale: 2 })
+  @IsNumber(
+    { maxDecimalPlaces: 2 },
+    { message: 'Ошибка валидации переданных значений' },
+  )
   price: number;
 
-  @Column({ default: 0 })
-  @IsNumber({}, { message: 'Ошибка валидации переданных значений' })
+  @Column('numeric', { default: 0, scale: 2 })
+  @IsNumber(
+    { maxDecimalPlaces: 2 },
+    { message: 'Ошибка валидации переданных значений' },
+  )
   raised: number;
 
   @Column()
@@ -59,6 +65,5 @@ export class Wish {
   offers: Offer[];
 
   @ManyToOne(() => User, (user) => user.offers)
-  @JoinTable()
   owner: User;
 }

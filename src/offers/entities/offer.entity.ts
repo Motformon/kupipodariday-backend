@@ -25,8 +25,11 @@ export class Offer {
   @JoinColumn()
   item: Wish;
 
-  @Column()
-  @IsNumber({}, { message: 'Ошибка валидации переданных значений' })
+  @Column('numeric', { scale: 2 })
+  @IsNumber(
+    { maxDecimalPlaces: 2 },
+    { message: 'Ошибка валидации переданных значений' },
+  )
   amount: number;
 
   @Column({ default: false })

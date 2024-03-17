@@ -3,7 +3,10 @@ import { IsNumber } from 'class-validator';
 
 export class CreateOfferDto {
   @ApiProperty()
-  @IsNumber({}, { message: 'Ошибка валидации переданных значений' })
+  @IsNumber(
+    { maxDecimalPlaces: 2 },
+    { message: 'Ошибка валидации переданных значений' },
+  )
   amount: number;
 
   @ApiProperty()

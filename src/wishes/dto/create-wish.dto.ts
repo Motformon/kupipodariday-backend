@@ -18,7 +18,10 @@ export class CreateWishDto {
   image: string;
 
   @ApiProperty()
-  @IsNumber()
+  @IsNumber(
+    { maxDecimalPlaces: 2 },
+    { message: 'Ошибка валидации переданных значений' },
+  )
   price: number;
 
   @ApiProperty()

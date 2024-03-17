@@ -49,7 +49,6 @@ export class User {
   password: string;
 
   @OneToMany(() => Wish, (wish) => wish.owner)
-  @JoinTable()
   wishes: Wish[];
 
   @OneToMany(() => Offer, (offer) => offer.user)
