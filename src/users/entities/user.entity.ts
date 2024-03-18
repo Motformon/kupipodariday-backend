@@ -1,12 +1,5 @@
 import { IsEmail, IsOptional, IsString, IsUrl, Length } from 'class-validator';
-import { Exclude } from 'class-transformer';
-import {
-  Entity,
-  PrimaryGeneratedColumn,
-  Column,
-  OneToMany,
-  JoinTable,
-} from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, OneToMany } from 'typeorm';
 import { Wish } from '../../wishes/entities/wish.entity';
 import { Offer } from '../../offers/entities/offer.entity';
 import { Wishlist } from 'src/wishlists/entities/wishlist.entity';

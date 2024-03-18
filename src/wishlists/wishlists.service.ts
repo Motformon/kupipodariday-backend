@@ -15,7 +15,12 @@ export class WishlistsService {
   ) {}
 
   findAll(): Promise<Wishlist[]> {
-    return this.wishlistRepository.find();
+    return this.wishlistRepository.find({
+      relations: {
+        owner: true,
+        items: true,
+      },
+    });
   }
 
   findById(id: number): Promise<Wishlist> {
@@ -25,6 +30,7 @@ export class WishlistsService {
       },
       relations: {
         owner: true,
+        items: true,
       },
     });
   }

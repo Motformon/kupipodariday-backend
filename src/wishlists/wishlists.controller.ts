@@ -2,6 +2,7 @@ import {
   Body,
   Controller,
   Delete,
+  ForbiddenException,
   Get,
   NotFoundException,
   Param,
@@ -55,23 +56,30 @@ export class WishlistsController {
   ) {
     const findWishlist = await this.wishlistsService.findById(id);
     if (!findWishlist) {
-      throw new NotFoundException();
+      throw new NotFoundException('Список подарков не найден!');
     }
     const userId = req?.user?.sub;
+    if (Number(userId) !== Number(findWishlist?.owner?.id)) {
+      throw new ForbiddenException('Нет прав!');
+    }
+
     const findUser = await this.usersService.findById(userId);
     if (!findUser) {
       throw new NotFoundException('Пользователь не найден!');
     }
     const wishes = await this.wishesService.findByIds(wishlist.itemsId || []);
-
     await this.wishlistsService.updateById(id, wishlist, findUser, wishes);
   }
 
   @Delete(':id')
-  async removeById(@Param('id', ParseIntPipe) id: number) {
+  async removeById(@Param('id', ParseIntPipe) id: number, @Request() req) {
     const wishlist = await this.wishlistsService.findById(id);
     if (!wishlist) {
-      throw new NotFoundException();
+      throw new NotFoundException('Список подарков не найден!');
+    }
+    const userId = req?.user?.sub;
+    if (Number(userId) !== Number(wishlist?.owner?.id)) {
+      throw new ForbiddenException('Нет прав!');
     }
     await this.wishlistsService.removeById(id);
   }

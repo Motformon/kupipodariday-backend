@@ -1,6 +1,7 @@
 import {
   Body,
   Controller,
+  ForbiddenException,
   Get,
   NotFoundException,
   Param,
@@ -43,6 +44,29 @@ export class OffersController {
     if (!findWish) {
       throw new NotFoundException('Подарок не найден!');
     }
+
+    const amount = offer.amount;
+    const raised = findWish.raised;
+    const price = findWish.price;
+
+    if (amount + raised > price) {
+      throw new ForbiddenException(
+        `Сумма собранных средств не может превышать стоимость подарка! Можно скинуть не больше ${
+          price - raised
+        }`,
+      );
+    } else if (price === raised) {
+      throw new ForbiddenException(
+        'Нельзя скинуться на подарки, на которые уже собраны деньги!',
+      );
+    } else if (userId === findWish.owner.id) {
+      throw new ForbiddenException(
+        'Нельзя вносить деньги на собственные подарки!',
+      );
+    }
+
+    await this.wishesService.updateRaisedById(findWish.id, raised + amount);
+
     return this.offersService.create(offer, findUser, findWish);
   }
 }

@@ -2,6 +2,7 @@ import {
   Body,
   Controller,
   Delete,
+  ForbiddenException,
   Get,
   NotFoundException,
   Param,
@@ -15,6 +16,7 @@ import { UpdateWishDto } from './dto/update-wish.dto';
 import { Wish } from './entities/wish.entity';
 import { WishesService } from './wishes.service';
 import { UsersService } from '../users/users.service';
+import { Public } from 'src/auth/decorators/public.decorator';
 
 @Controller('wishes')
 export class WishesController {
@@ -23,11 +25,13 @@ export class WishesController {
     private usersService: UsersService,
   ) {}
 
+  @Public()
   @Get('/top')
   findTop(): Promise<Wish[]> {
     return this.wishesService.findTop();
   }
 
+  @Public()
   @Get('/last')
   findLast(): Promise<Wish[]> {
     return this.wishesService.findLast();
@@ -76,6 +80,7 @@ export class WishesController {
 
   @Patch(':id')
   async updateById(
+    @Request() req,
     @Param('id', ParseIntPipe) id: number,
     @Body() wish: UpdateWishDto,
   ) {
@@ -83,14 +88,28 @@ export class WishesController {
     if (!findWish) {
       throw new NotFoundException('Подарок не найден!');
     }
+    if (wish.price !== findWish.price && findWish.offers.length > 0) {
+      throw new ForbiddenException(
+        'Нельзя изменять стоимость подарка, если уже есть желающие скинуться!',
+      );
+    }
+    const userId = req?.user?.sub;
+    if (Number(userId) !== Number(findWish?.owner?.id)) {
+      throw new ForbiddenException('Нет прав!');
+    }
+
     await this.wishesService.updateById(id, wish);
   }
 
   @Delete(':id')
-  async removeById(@Param('id', ParseIntPipe) id: number) {
+  async removeById(@Request() req, @Param('id', ParseIntPipe) id: number) {
     const wish = await this.wishesService.findById(id);
     if (!wish) {
       throw new NotFoundException('Подарок не найден!');
+    }
+    const userId = req?.user?.sub;
+    if (Number(userId) !== Number(userId?.owner?.id)) {
+      throw new ForbiddenException('Нет прав!');
     }
     await this.wishesService.removeById(id);
   }

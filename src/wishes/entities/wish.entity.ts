@@ -4,7 +4,6 @@ import {
   Column,
   OneToMany,
   ManyToOne,
-  JoinTable,
 } from 'typeorm';
 import { IsNumber, IsString, IsUrl, Length } from 'class-validator';
 import { Offer } from '../../offers/entities/offer.entity';

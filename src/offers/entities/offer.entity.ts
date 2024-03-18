@@ -21,10 +21,6 @@ export class Offer {
   @Column({ default: new Date() })
   updatedAt: Date;
 
-  @OneToOne(() => Wish)
-  @JoinColumn()
-  item: Wish;
-
   @Column('numeric', { scale: 2 })
   @IsNumber(
     { maxDecimalPlaces: 2 },
@@ -34,6 +30,10 @@ export class Offer {
 
   @Column({ default: false })
   hidden: boolean;
+
+  @OneToOne(() => Wish)
+  @JoinColumn()
+  item: Wish;
 
   @ManyToOne(() => User, (user) => user.wishes)
   user: User;

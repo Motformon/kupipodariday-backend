@@ -52,10 +52,6 @@ export class WishesService {
       where: {
         id: In(ids),
       },
-      // relations: {
-      //   owner: true,
-      //   offers: true,
-      // },
     });
   }
 
@@ -67,6 +63,13 @@ export class WishesService {
     return this.wishRepository.update(
       { id },
       { ...updateWishDto, updatedAt: new Date() },
+    );
+  }
+
+  updateRaisedById(id: number, raised: number) {
+    return this.wishRepository.update(
+      { id },
+      { raised, updatedAt: new Date() },
     );
   }
 
