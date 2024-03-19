@@ -1,5 +1,4 @@
 import { Module } from '@nestjs/common';
-import { AppController } from './app.controller';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { UsersModule } from './users/users.module';
 import { WishesModule } from './wishes/wishes.module';
@@ -30,7 +29,7 @@ import { AuthModule } from './auth/auth.module';
     WishlistsModule,
     OffersModule,
   ],
-  controllers: [AppController],
+  controllers: [],
   providers: [],
 })
 export class AppModule {}

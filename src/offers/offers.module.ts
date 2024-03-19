@@ -7,12 +7,14 @@ import { User } from '../users/entities/user.entity';
 import { UsersService } from '../users/users.service';
 import { Wish } from '../wishes/entities/wish.entity';
 import { WishesService } from '../wishes/wishes.service';
+import { JwtModule } from '@nestjs/jwt';
 
 @Module({
   imports: [
     TypeOrmModule.forFeature([Offer]),
     TypeOrmModule.forFeature([User]),
     TypeOrmModule.forFeature([Wish]),
+    JwtModule,
   ],
   providers: [OffersService, UsersService, WishesService],
   controllers: [OffersController],

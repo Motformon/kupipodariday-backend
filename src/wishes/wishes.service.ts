@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { ForbiddenException, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { In, Repository } from 'typeorm';
 import { CreateWishDto } from './dto/create-wish.dto';
@@ -66,10 +66,29 @@ export class WishesService {
     );
   }
 
-  updateRaisedById(id: number, raised: number) {
+  updateRaisedById(wish: Wish, amount: number, userId: number) {
+    const raised = wish.raised;
+    const price = wish.price;
+
+    if (amount + raised > price) {
+      throw new ForbiddenException(
+        `Сумма собранных средств не может превышать стоимость подарка! Можно скинуть не больше ${
+          price - raised
+        }`,
+      );
+    } else if (price === raised) {
+      throw new ForbiddenException(
+        'Нельзя скинуться на подарки, на которые уже собраны деньги!',
+      );
+    } else if (userId === wish.owner.id) {
+      throw new ForbiddenException(
+        'Нельзя вносить деньги на собственные подарки!',
+      );
+    }
+
     return this.wishRepository.update(
-      { id },
-      { raised, updatedAt: new Date() },
+      { id: wish.id },
+      { raised: raised + amount, updatedAt: new Date() },
     );
   }
 

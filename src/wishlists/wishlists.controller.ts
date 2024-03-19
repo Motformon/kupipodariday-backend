@@ -10,6 +10,7 @@ import {
   Patch,
   Post,
   Request,
+  UseGuards,
 } from '@nestjs/common';
 import { CreateWishlistDto } from './dto/create-wishlist.dto';
 import { UpdateWishlistDto } from './dto/update-wishlist.dto';
@@ -17,6 +18,7 @@ import { Wishlist } from './entities/wishlist.entity';
 import { WishlistsService } from './wishlists.service';
 import { UsersService } from '../users/users.service';
 import { WishesService } from '../wishes/wishes.service';
+import { AuthGuard } from '../auth/auth.guard';
 
 @Controller('wishlists')
 export class WishlistsController {
@@ -26,16 +28,19 @@ export class WishlistsController {
     private wishesService: WishesService,
   ) {}
 
+  @UseGuards(AuthGuard)
   @Get()
   findAll(): Promise<Wishlist[]> {
     return this.wishlistsService.findAll();
   }
 
+  @UseGuards(AuthGuard)
   @Get(':id')
   findById(@Param('id', ParseIntPipe) id: number): Promise<Wishlist> {
     return this.wishlistsService.findById(id);
   }
 
+  @UseGuards(AuthGuard)
   @Post()
   async create(@Request() req, @Body() wishlist: CreateWishlistDto) {
     const userId = req?.user?.sub;
@@ -48,6 +53,7 @@ export class WishlistsController {
     return this.wishlistsService.create(wishlist, findUser, wishes);
   }
 
+  @UseGuards(AuthGuard)
   @Patch(':id')
   async updateById(
     @Request() req,
@@ -71,6 +77,7 @@ export class WishlistsController {
     await this.wishlistsService.updateById(id, wishlist, findUser, wishes);
   }
 
+  @UseGuards(AuthGuard)
   @Delete(':id')
   async removeById(@Param('id', ParseIntPipe) id: number, @Request() req) {
     const wishlist = await this.wishlistsService.findById(id);

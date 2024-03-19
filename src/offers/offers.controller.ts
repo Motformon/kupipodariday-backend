@@ -1,19 +1,20 @@
 import {
   Body,
   Controller,
-  ForbiddenException,
   Get,
   NotFoundException,
   Param,
   ParseIntPipe,
   Post,
   Request,
+  UseGuards,
 } from '@nestjs/common';
 import { OffersService } from './offers.service';
 import { Offer } from './entities/offer.entity';
 import { CreateOfferDto } from './dto/create-offer.dto';
 import { UsersService } from '../users/users.service';
 import { WishesService } from '../wishes/wishes.service';
+import { AuthGuard } from '../auth/auth.guard';
 
 @Controller('offers')
 export class OffersController {
@@ -23,16 +24,19 @@ export class OffersController {
     private wishesService: WishesService,
   ) {}
 
+  @UseGuards(AuthGuard)
   @Get()
   findAll(): Promise<Offer[]> {
     return this.offersService.findAll();
   }
 
+  @UseGuards(AuthGuard)
   @Get(':id')
   findById(@Param('id', ParseIntPipe) id: number): Promise<Offer> {
     return this.offersService.findById(id);
   }
 
+  @UseGuards(AuthGuard)
   @Post()
   async create(@Request() req, @Body() offer: CreateOfferDto) {
     const userId = req?.user?.sub;
@@ -46,26 +50,8 @@ export class OffersController {
     }
 
     const amount = offer.amount;
-    const raised = findWish.raised;
-    const price = findWish.price;
 
-    if (amount + raised > price) {
-      throw new ForbiddenException(
-        `Сумма собранных средств не может превышать стоимость подарка! Можно скинуть не больше ${
-          price - raised
-        }`,
-      );
-    } else if (price === raised) {
-      throw new ForbiddenException(
-        'Нельзя скинуться на подарки, на которые уже собраны деньги!',
-      );
-    } else if (userId === findWish.owner.id) {
-      throw new ForbiddenException(
-        'Нельзя вносить деньги на собственные подарки!',
-      );
-    }
-
-    await this.wishesService.updateRaisedById(findWish.id, raised + amount);
+    await this.wishesService.updateRaisedById(findWish, amount, userId);
 
     return this.offersService.create(offer, findUser, findWish);
   }
