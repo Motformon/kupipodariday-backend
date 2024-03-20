@@ -28,14 +28,12 @@ export class WishesController {
   ) {}
 
   @Public()
-  @UseGuards(AuthGuard)
   @Get('/top')
   findTop(): Promise<Wish[]> {
     return this.wishesService.findTop();
   }
 
   @Public()
-  @UseGuards(AuthGuard)
   @Get('/last')
   findLast(): Promise<Wish[]> {
     return this.wishesService.findLast();
